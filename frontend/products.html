@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop Collection | LUMIÈRE</title>
+    <link href="./css/output.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Outfit', sans-serif; }
+        .font-serif-luxury { font-family: 'Playfair Display', serif; }
+        /* Custom scrollbar for sidebar */
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-[#fafafa] text-gray-900 antialiased flex flex-col min-h-screen">
+    
+    <!-- Navbar (Simplified from Index) -->
+    <nav class="sticky top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-100">
+        <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex-shrink-0 flex items-center">
+                    <a href="index.html" class="text-2xl font-serif-luxury font-semibold tracking-widest text-black uppercase">Lumière</a>
+                </div>
+                <div class="hidden md:flex space-x-10">
+                    <a href="index.html" class="text-sm font-medium text-gray-500 hover:text-black transition-colors">Home</a>
+                    <a href="products.html" class="text-sm font-medium text-black hover:text-gray-500 transition-colors">Shop</a>
+                </div>
+                <div class="flex items-center space-x-6">
+                    <a href="cart.html" class="text-gray-900 hover:text-gray-600 transition-colors relative flex items-center gap-2">
+                        <span class="text-sm font-medium tracking-wide hidden md:block">Cart</span>
+                        <div class="relative">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                            <span id="cart-count" class="absolute -top-2 -right-2 bg-black text-white text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center hidden">0</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="bg-white border-b border-gray-100 py-12">
+        <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl md:text-5xl font-serif-luxury text-black mb-4">The Collection</h1>
+            <p class="text-gray-500 font-light max-w-2xl mx-auto">Explore our premium selection of meticulously crafted pieces designed for the modern wardrobe.</p>
+        </div>
+    </div>
+
+    <main class="flex-grow max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full flex flex-col md:flex-row gap-10">
+        
+        <!-- Mobile Filter Toggle -->
+        <div class="md:hidden flex justify-between items-center w-full mb-6 border-b border-gray-200 pb-4">
+            <button id="mobile-filter-btn" class="flex items-center text-sm font-medium text-black uppercase tracking-wider">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+                Filters
+            </button>
+            <div class="text-sm text-gray-500"><span id="mobile-result-count">0</span> Results</div>
+        </div>
+
+        <!-- Sidebar / Filters -->
+        <aside id="filters-sidebar" class="hidden md:block w-full md:w-64 flex-shrink-0">
+            <div class="sticky top-28 space-y-10 custom-scrollbar overflow-y-auto max-h-[calc(100vh-120px)] pr-4">
+                
+                <!-- Search -->
+                <div>
+                    <h3 class="text-xs font-semibold text-gray-900 uppercase tracking-widest mb-4">Search</h3>
+                    <div class="relative">
+                        <input type="text" id="search-input" placeholder="Search products..." class="w-full bg-[#fafafa] border border-gray-200 text-sm py-2.5 pl-3 pr-10 focus:outline-none focus:border-black focus:ring-0 transition-colors">
+                        <svg class="w-4 h-4 absolute right-3 top-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </div>
+                </div>
+
+                <!-- Categories -->
+                <div>
+                    <h3 class="text-xs font-semibold text-gray-900 uppercase tracking-widest mb-4">Categories</h3>
+                    <div class="space-y-3" id="category-filters">
+                        <label class="flex items-center group cursor-pointer">
+                            <input type="radio" name="category" value="all" checked class="w-4 h-4 text-black border-gray-300 focus:ring-black">
+                            <span class="ml-3 text-sm text-gray-600 group-hover:text-black transition-colors">All Products</span>
+                        </label>
+                        <label class="flex items-center group cursor-pointer">
+                            <input type="radio" name="category" value="Tops" class="w-4 h-4 text-black border-gray-300 focus:ring-black">
+                            <span class="ml-3 text-sm text-gray-600 group-hover:text-black transition-colors">Tops</span>
+                        </label>
+                        <label class="flex items-center group cursor-pointer">
+                            <input type="radio" name="category" value="Outerwear" class="w-4 h-4 text-black border-gray-300 focus:ring-black">
+                            <span class="ml-3 text-sm text-gray-600 group-hover:text-black transition-colors">Outerwear</span>
+                        </label>
+                        <label class="flex items-center group cursor-pointer">
+                            <input type="radio" name="category" value="Bottoms" class="w-4 h-4 text-black border-gray-300 focus:ring-black">
+                            <span class="ml-3 text-sm text-gray-600 group-hover:text-black transition-colors">Bottoms</span>
+                        </label>
+                        <label class="flex items-center group cursor-pointer">
+                            <input type="radio" name="category" value="Footwear" class="w-4 h-4 text-black border-gray-300 focus:ring-black">
+                            <span class="ml-3 text-sm text-gray-600 group-hover:text-black transition-colors">Footwear</span>
+                        </label>
+                        <label class="flex items-center group cursor-pointer">
+                            <input type="radio" name="category" value="Accessories" class="w-4 h-4 text-black border-gray-300 focus:ring-black">
+                            <span class="ml-3 text-sm text-gray-600 group-hover:text-black transition-colors">Accessories</span>
+                        </label>
+                        <label class="flex items-center group cursor-pointer">
+                            <input type="radio" name="category" value="Dresses" class="w-4 h-4 text-black border-gray-300 focus:ring-black">
+                            <span class="ml-3 text-sm text-gray-600 group-hover:text-black transition-colors">Dresses</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Price Filter -->
+                <div>
+                    <h3 class="text-xs font-semibold text-gray-900 uppercase tracking-widest mb-4">Price Range</h3>
+                    <div class="space-y-3" id="price-filters">
+                        <label class="flex items-center group cursor-pointer">
+                            <input type="radio" name="price" value="all" checked class="w-4 h-4 text-black border-gray-300 focus:ring-black">
+                            <span class="ml-3 text-sm text-gray-600 group-hover:text-black transition-colors">Any Price</span>
+                        </label>
+                        <label class="flex items-center group cursor-pointer">
+                            <input type="radio" name="price" value="under50" class="w-4 h-4 text-black border-gray-300 focus:ring-black">
+                            <span class="ml-3 text-sm text-gray-600 group-hover:text-black transition-colors">Under $50</span>
+                        </label>
+                        <label class="flex items-center group cursor-pointer">
+                            <input type="radio" name="price" value="50to100" class="w-4 h-4 text-black border-gray-300 focus:ring-black">
+                            <span class="ml-3 text-sm text-gray-600 group-hover:text-black transition-colors">$50 - $100</span>
+                        </label>
+                        <label class="flex items-center group cursor-pointer">
+                            <input type="radio" name="price" value="over100" class="w-4 h-4 text-black border-gray-300 focus:ring-black">
+                            <span class="ml-3 text-sm text-gray-600 group-hover:text-black transition-colors">Over $100</span>
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+        </aside>
+
+        <!-- Main Content (Grid) -->
+        <div class="flex-1">
+            <!-- Top bar (Sort & Results count) -->
+            <div class="hidden md:flex justify-between items-center mb-8 pb-4 border-b border-gray-200">
+                <p class="text-sm text-gray-500"><span id="desktop-result-count">0</span> Results</p>
+                <div class="flex items-center space-x-3">
+                    <label for="sort-by" class="text-sm font-medium text-gray-700">Sort by:</label>
+                    <select id="sort-by" class="text-sm bg-transparent border-none py-1 pl-2 pr-8 focus:ring-0 focus:outline-none cursor-pointer text-black font-medium uppercase tracking-wider">
+                        <option value="featured">Featured</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                        <option value="newest">Newest Arrivals</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Product Grid -->
+            <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12">
+                <!-- Skeleton Loader -->
+                <div class="animate-pulse">
+                    <div class="bg-gray-200 h-[400px] w-full mb-4"></div>
+                    <div class="h-4 bg-gray-200 w-3/4 mb-2"></div>
+                    <div class="h-4 bg-gray-200 w-1/4"></div>
+                </div>
+                <div class="animate-pulse hidden sm:block">
+                    <div class="bg-gray-200 h-[400px] w-full mb-4"></div>
+                    <div class="h-4 bg-gray-200 w-3/4 mb-2"></div>
+                    <div class="h-4 bg-gray-200 w-1/4"></div>
+                </div>
+                <div class="animate-pulse hidden lg:block">
+                    <div class="bg-gray-200 h-[400px] w-full mb-4"></div>
+                    <div class="h-4 bg-gray-200 w-3/4 mb-2"></div>
+                    <div class="h-4 bg-gray-200 w-1/4"></div>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div id="empty-state" class="hidden flex flex-col items-center justify-center py-20 text-center">
+                <svg class="w-16 h-16 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <h3 class="text-xl font-serif-luxury text-black mb-2">No products found</h3>
+                <p class="text-gray-500 font-light">Try adjusting your filters or search query.</p>
+                <button id="clear-filters-btn" class="mt-6 text-sm font-medium uppercase tracking-widest border-b border-black pb-1 hover:text-gray-600 transition-colors">Clear All Filters</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer (Simplified) -->
+    <footer class="bg-black text-white py-12 mt-auto">
+        <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs tracking-wider uppercase text-gray-500">
+            <p>&copy; 2026 LUMIÈRE. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-3"></div>
+
+    <script src="./js/api.js"></script>
+    <script src="./js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const grid = document.getElementById('products-grid');
+            const emptyState = document.getElementById('empty-state');
+            const desktopCount = document.getElementById('desktop-result-count');
+            const mobileCount = document.getElementById('mobile-result-count');
+            
+            // Filter elements
+            const searchInput = document.getElementById('search-input');
+            const categoryRadios = document.querySelectorAll('input[name="category"]');
+            const priceRadios = document.querySelectorAll('input[name="price"]');
+            const sortBySelect = document.getElementById('sort-by');
+            const clearBtn = document.getElementById('clear-filters-btn');
+
+            let allProducts = [];
+
+            // Helper to generate random stars for UI (since backend doesn't have ratings)
+            const generateStars = (productId) => {
+                // Use productId to deterministically generate a rating between 3.5 and 5
+                const rand = (productId * 13 % 15) + 35; // 35 to 50
+                const rating = rand / 10;
+                const fullStars = Math.floor(rating);
+                const hasHalfStar = rating % 1 >= 0.5;
+                
+                let starsHTML = '';
+                for(let i=0; i<5; i++) {
+                    if (i < fullStars) {
+                        starsHTML += `<svg class="w-3.5 h-3.5 text-black" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>`;
+                    } else if (i === fullStars && hasHalfStar) {
+                        // Half star trick using gradient (simplified for this example, using a muted star)
+                        starsHTML += `<svg class="w-3.5 h-3.5 text-gray-300" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>`;
+                    } else {
+                        starsHTML += `<svg class="w-3.5 h-3.5 text-gray-300" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>`;
+                    }
+                }
+                return `<div class="flex items-center space-x-0.5" title="${rating} out of 5">${starsHTML}</div> <span class="text-[10px] text-gray-400 ml-2">(${(productId * 7 % 120) + 12})</span>`;
+            };
+
+            const renderProducts = (products) => {
+                desktopCount.textContent = products.length;
+                mobileCount.textContent = products.length;
+
+                if (products.length === 0) {
+                    grid.classList.add('hidden');
+                    emptyState.classList.remove('hidden');
+                    return;
+                }
+                
+                grid.classList.remove('hidden');
+                emptyState.classList.add('hidden');
+
+                grid.innerHTML = products.map(product => `
+                    <div class="group flex flex-col">
+                        <div class="relative w-full h-[450px] bg-gray-100 overflow-hidden mb-5">
+                            <a href="product.html?id=${product.id}" class="block w-full h-full">
+                                <img src="${product.image_url}" alt="${product.name}" class="w-full h-full object-cover object-center transform transition-transform duration-1000 group-hover:scale-105">
+                            </a>
+                            <!-- Hover Add To Cart -->
+                            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 pointer-events-none"></div>
+                            <button onclick='addToCart(${JSON.stringify(product).replace(/'/g, "&#39;")})' class="absolute bottom-0 left-0 w-full bg-white/95 backdrop-blur text-black py-4 font-medium uppercase tracking-wider text-xs translate-y-full group-hover:translate-y-0 transition-transform duration-300 hover:bg-black hover:text-white">
+                                Add To Cart
+                            </button>
+                        </div>
+                        <div class="flex flex-col flex-grow">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-base font-medium text-black">
+                                    <a href="product.html?id=${product.id}" class="hover:underline">${product.name}</a>
+                                </h3>
+                                <p class="text-base font-medium text-black">${formatPrice(product.price)}</p>
+                            </div>
+                            <p class="text-xs text-gray-500 uppercase tracking-widest mb-3">${product.category}</p>
+                            <div class="mt-auto flex items-center">
+                                ${generateStars(product.id)}
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            };
+
+            const applyFiltersAndSort = () => {
+                const query = searchInput.value.toLowerCase();
+                const category = document.querySelector('input[name="category"]:checked').value;
+                const priceFilter = document.querySelector('input[name="price"]:checked').value;
+                const sortBy = sortBySelect.value;
+
+                let filtered = allProducts.filter(p => {
+                    // Search
+                    if (query && !p.name.toLowerCase().includes(query)) return false;
+                    
+                    // Category
+                    if (category !== 'all' && p.category !== category) return false;
+                    
+                    // Price
+                    const price = parseFloat(p.price);
+                    if (priceFilter === 'under50' && price >= 50) return false;
+                    if (priceFilter === '50to100' && (price < 50 || price > 100)) return false;
+                    if (priceFilter === 'over100' && price <= 100) return false;
+
+                    return true;
+                });
+
+                // Sort
+                if (sortBy === 'price-low') {
+                    filtered.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
+                } else if (sortBy === 'price-high') {
+                    filtered.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
+                } else if (sortBy === 'newest') {
+                    filtered.sort((a, b) => b.id - a.id); // Assuming higher ID = newer
+                }
+                // 'featured' keeps original order
+
+                renderProducts(filtered);
+            };
+
+            // Event Listeners
+            searchInput.addEventListener('input', applyFiltersAndSort);
+            categoryRadios.forEach(radio => radio.addEventListener('change', applyFiltersAndSort));
+            priceRadios.forEach(radio => radio.addEventListener('change', applyFiltersAndSort));
+            sortBySelect.addEventListener('change', applyFiltersAndSort);
+
+            clearBtn.addEventListener('click', () => {
+                searchInput.value = '';
+                document.querySelector('input[name="category"][value="all"]').checked = true;
+                document.querySelector('input[name="price"][value="all"]').checked = true;
+                sortBySelect.value = 'featured';
+                applyFiltersAndSort();
+            });
+
+            // Mobile filter toggle
+            const mobileFilterBtn = document.getElementById('mobile-filter-btn');
+            const sidebar = document.getElementById('filters-sidebar');
+            mobileFilterBtn.addEventListener('click', () => {
+                sidebar.classList.toggle('hidden');
+                sidebar.classList.toggle('w-full');
+            });
+
+            // Fetch and initial render
+            try {
+                // Using the api.js helper built previously
+                allProducts = await api.getProducts();
+                
+                // Pre-select category if passed in URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const categoryParam = urlParams.get('category');
+                if (categoryParam) {
+                    const radio = document.querySelector(`input[name="category"][value="${categoryParam}"]`);
+                    if (radio) radio.checked = true;
+                }
+
+                applyFiltersAndSort();
+            } catch (error) {
+                console.error("Failed to fetch products:", error);
+                grid.innerHTML = '<p class="text-red-500 py-10">Error loading products. Please ensure the backend server is running.</p>';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: fashion_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: fashion_retail
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      # Map init scripts so schema and seed data are populated on first run
+      - ./backend/database/schema.sql:/docker-entrypoint-initdb.d/1-schema.sql
+      - ./backend/database/seed.sql:/docker-entrypoint-initdb.d/2-seed.sql
+
+  backend:
+    build: ./backend
+    container_name: fashion_backend
+    restart: always
+    environment:
+      - PORT=5000
+      - DB_HOST=mysql
+      - DB_USER=root
+      - DB_PASSWORD=password
+      - DB_NAME=fashion_retail
+    depends_on:
+      - mysql
+
+  frontend:
+    build: ./frontend
+    container_name: fashion_frontend
+    restart: always
+    ports:
+      - "3000:80" # Map host port 3000 to internal nginx port 80
+    depends_on:
+      - backend
+
+volumes:
+  mysql_data:
+    # Persistent volume for the database
